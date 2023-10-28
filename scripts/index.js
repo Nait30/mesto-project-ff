@@ -6,20 +6,28 @@
 
 // @todo: Функция создания карточки
 
-function addCard(cardNum, deleteCard) {
+function createCard(cardData, deleteCard) {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   const image = cardElement.querySelector('.card__image');
   const deleteButton = cardElement.querySelector('.card__delete-button'); 
   const cardName = cardElement.querySelector('.card__title');
 
-  image.src = initialCards[cardNum].link;
+  image.src = cardData.link;
+  
+  if (cardData.alt != undefined) {
+    image.alt = cardData.alt;
+  }
 
-  cardName.textContent = initialCards[cardNum].name;
+  cardName.textContent = cardData.name;
 
   deleteButton.addEventListener('click', deleteCard);
 
-  document.querySelector('.places__list').append(cardElement);
+  return cardElement;
+}
+
+function addCard(cardData, deleteCard) {
+  document.querySelector('.places__list').append(createCard(cardData, deleteCard));
 }
 
 // @todo: Функция удаления карточки
@@ -32,5 +40,5 @@ function deleteCard(event) {
 // @todo: Вывести карточки на страницу
 
 for (let i = 0; i < 6; i++) {
-  addCard(i, deleteCard);
+  addCard(initialCards[i], deleteCard);
 }

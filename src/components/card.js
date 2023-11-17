@@ -1,6 +1,8 @@
-import {hsndleShowCard} from './modal';
+import {handleShowCard} from './modal';
 
-function createCard(cardData, deleteCard, likeCardFunc) {
+const placesList = document.querySelector('.places__list');
+
+function createCard(cardData, deleteCardFunc, likeCardFunc, showCardFunc) {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   const image = cardElement.querySelector('.card__image');
@@ -16,20 +18,18 @@ function createCard(cardData, deleteCard, likeCardFunc) {
 
   cardName.textContent = cardData.name;
 
-  deleteButton.addEventListener('click', deleteCard);
+  deleteButton.addEventListener('click', deleteCardFunc);
 
   likeButton.addEventListener('click', likeCardFunc);
 
-  image.addEventListener('click', hsndleShowCard);
+  image.addEventListener('click', showCardFunc);
 
   return cardElement;
 }
 
 function addCard(cardData, deleteCard) {
-  document.querySelector('.places__list').prepend(createCard(cardData, deleteCard, likeCard));
+  placesList.prepend(createCard(cardData, deleteCard, likeCard, handleShowCard));
 }
-
-// @todo: Функция удаления карточки
 
 function deleteCard(event) {
   const cardForDel = event.target.closest('.card');

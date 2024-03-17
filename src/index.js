@@ -2,12 +2,14 @@ import './index.css';
 import {initialCards} from './components/cards.js'
 import {createCard, addCard, deleteCard} from './components/card.js'
 import {openPopup, changeProfile, handleOpenPopupProfile, handleAddPlace, addPlace, closePopup} from './components/modal.js';
+import {enableValidation, popupValidationConfig } from './components/validation.js';
 
 const profileEditButton = document.querySelector('.profile__edit-button');
 const profileForm = document.forms['edit-profile'];
 const placeAddButton = document.querySelector('.profile__add-button');
 const placeForm = document.forms['new-place'];
-const popups = document.querySelectorAll('.popup')
+const popups = document.querySelectorAll('.popup');
+
 
 
 popups.forEach((popup) => {
@@ -33,3 +35,5 @@ profileForm.addEventListener('submit', changeProfile);
 placeAddButton.addEventListener('click', handleAddPlace);
 
 placeForm.addEventListener('submit', addPlace);
+
+enableValidation(popupValidationConfig); 

@@ -1,4 +1,5 @@
 import {createCard, addCard, deleteCard} from './card.js'
+import {checkInputValidity, popupValidationConfig} from './validation.js'
 
 const profilePopup = document.querySelector('.popup_type_edit');
 const profileInputName = profilePopup.querySelector('.popup__input_type_name');
@@ -23,6 +24,12 @@ function handleOpenPopupProfile(evt){
   profileInputName.value = profileTitle.textContent;
   profileInputDescription.value = profileDescription.textContent;
   openPopup(profilePopup);
+  const formElement = profilePopup.querySelector('.popup__form');
+  const inputElements = formElement.querySelectorAll('.popup__input');
+  inputElements.forEach((inputElement) => {
+    checkInputValidity (formElement, inputElement, popupValidationConfig);
+  })
+
 }
 
 function handleEscapeKey (evt){

@@ -1,14 +1,16 @@
 import './index.css';
 import {initialCards} from './components/cards.js'
-import {createCard, addCard, deleteCard} from './components/card.js'
-import {openPopup, changeProfile, handleOpenPopupProfile, handleAddPlace, addPlace, closePopup} from './components/modal.js';
+import {createCard, addCard, removeCard, showCards} from './components/card.js'
+import {openPopup, changeProfile, handleOpenPopupProfile, handleAddPlace, addPlace, closePopup, handleDeletePlace} from './components/modal.js';
 import {enableValidation, popupValidationConfig } from './components/validation.js';
+import { getProfile, config, updateProfile, getCards, showProfileChanges } from './components/api.js';
 
 const profileEditButton = document.querySelector('.profile__edit-button');
 const profileForm = document.forms['edit-profile'];
 const placeAddButton = document.querySelector('.profile__add-button');
 const placeForm = document.forms['new-place'];
 const popups = document.querySelectorAll('.popup');
+const cardDeleteButton = document.querySelector('.button_delete-card');
 
 
 
@@ -23,9 +25,10 @@ popups.forEach((popup) => {
   })
 })
 
-initialCards.forEach((card) => {
-  addCard(card, deleteCard);
-})
+showCards(config, addCard, handleDeletePlace);
+
+
+showProfileChanges(config);
 
 
 profileEditButton.addEventListener('click', handleOpenPopupProfile)
@@ -36,4 +39,8 @@ placeAddButton.addEventListener('click', handleAddPlace);
 
 placeForm.addEventListener('submit', addPlace);
 
+cardDeleteButton.addEventListener('click', removeCard);
+
 enableValidation(popupValidationConfig); 
+
+

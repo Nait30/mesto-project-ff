@@ -1,10 +1,22 @@
 import { config, getCards, deleteCard, putLike, deleteLike } from "./api";
-import { closePopup, handleShowCard, popupDeleteCard, changeSavingStatus, popupDeleteCardButton } from "./modal";
+import {
+  closePopup,
+  handleShowCard,
+  popupDeleteCard,
+  changeSavingStatus,
+  popupDeleteCardButton,
+} from "./modal";
 import { profileId } from "../index";
 
 const placesList = document.querySelector(".places__list");
 
-function createCard(cardData, removeCardFunc, likeCardFunc, showCardFunc, profileId) {
+function createCard(
+  cardData,
+  removeCardFunc,
+  likeCardFunc,
+  showCardFunc,
+  profileId
+) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate
     .querySelector(".places__item")
@@ -58,19 +70,17 @@ function removeCard(evt) {
   });
 }
 
-
-
 function showCards(addCard, removeCard, cards, profileId) {
-    cards.forEach((card) => {
-      addCard(card, removeCard, profileId);
-    });
+  cards.forEach((card) => {
+    addCard(card, removeCard, profileId);
+  });
 }
 
 function updateLikeStatus(cardData, counter, likeButton, profileId) {
   counter.textContent = countLikes(cardData.likes);
   if (
     cardData.likes.find((item) => {
-      return (item._id == profileId);
+      return item._id == profileId;
     })
   ) {
     likeButton.classList.add("card__like-button_is-active");
@@ -84,19 +94,20 @@ function handleLikeCard(evt) {
   const likeButton = evt.target.closest(".card__like-button");
   const likedCard = evt.target.closest(".card");
   const likeCounter = likedCard.querySelector(".likes__counter");
-  if(!(likeButton.classList.contains('card__like-button_is-active'))){
-    putLike(config, likedCard.getAttribute("data-card_id"))
-    .then((cardData)=> {
+  if (!likeButton.classList.contains("card__like-button_is-active")) {
+    putLike(config, likedCard.getAttribute("data-card_id")).then((cardData) => {
       updateLikeStatus(cardData, likeCounter, likeButton, profileId);
-    })
-  } else {deleteLike(config, likedCard.getAttribute("data-card_id"))
-  .then((cardData)=> {
-    updateLikeStatus(cardData, likeCounter, likeButton, profileId);})
-} 
-  
+    });
+  } else {
+    deleteLike(config, likedCard.getAttribute("data-card_id")).then(
+      (cardData) => {
+        updateLikeStatus(cardData, likeCounter, likeButton, profileId);
+      }
+    );
+  }
+
   likeButton.classList.remove("card__like-button_is-active");
 }
-
 
 function countLikes(likes) {
   return likes.length;

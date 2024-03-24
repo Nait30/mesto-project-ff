@@ -17,7 +17,8 @@ const profileInputDescription = profilePopup.querySelector(
 );
 const profilePopupButton = profilePopup.querySelector(".popup__button");
 const popupChangeAvatar = document.querySelector(".popup_type_change-avatar");
-const popupChangeAvatarButton = popupChangeAvatar.querySelector(".popup__button");
+const popupChangeAvatarButton =
+  popupChangeAvatar.querySelector(".popup__button");
 const inputNewAvatar = document.querySelector(".popup__input_type_avatar-url");
 const profileImage = document.querySelector(".profile__image");
 const popupDeleteCard = document.querySelector(".popup_card_delete");
@@ -79,13 +80,13 @@ function changeProfile(evt) {
 }
 
 function changeAvatar(config) {
-  changeSavingStatus(popupChangeAvatarButton, true)
+  changeSavingStatus(popupChangeAvatarButton, true);
   submitAvatar(config, {
     avatar: inputNewAvatar.value,
   }).then(() => {
     updateAvatar(profileImage, inputNewAvatar.value);
     closePopup(popupChangeAvatar);
-    changeSavingStatus(profilePopupButton, false)
+    changeSavingStatus(profilePopupButton, false);
   });
 }
 
@@ -110,8 +111,7 @@ function addPlace(evt) {
     name: inputImgName.value,
     link: inputImgLink.value,
   };
-  postCard(config, newPlace)
-  .then((cardData) => {
+  postCard(config, newPlace).then((cardData) => {
     addCard(cardData, handleDeletePlace);
     closePopup(popupAddNewCard);
     evt.target.reset();
@@ -153,5 +153,5 @@ export {
   changeAvatar,
   profileImage,
   changeSavingStatus,
-  popupDeleteCardButton
+  popupDeleteCardButton,
 };

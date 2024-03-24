@@ -6,6 +6,8 @@ import {
   updateProfile,
   showProfileChanges,
   postCard,
+  submitAvatar,
+  updateAvatar,
 } from "./api.js";
 
 const profilePopup = document.querySelector(".popup_type_edit");
@@ -13,10 +15,17 @@ const profileInputName = profilePopup.querySelector(".popup__input_type_name");
 const profileInputDescription = profilePopup.querySelector(
   ".popup__input_type_description"
 );
+const profilePopupButton = profilePopup.querySelector(".popup__button");
+const popupChangeAvatar = document.querySelector(".popup_type_change-avatar");
+const popupChangeAvatarButton = popupChangeAvatar.querySelector(".popup__button");
+const inputNewAvatar = document.querySelector(".popup__input_type_avatar-url");
+const profileImage = document.querySelector(".profile__image");
 const popupDeleteCard = document.querySelector(".popup_card_delete");
+const popupDeleteCardButton = popupDeleteCard.querySelector(".popup__button");
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const popupAddNewCard = document.querySelector(".popup_type_new-card");
+const popupAddNewCardButton = popupAddNewCard.querySelector(".popup__button");
 const inputImgLink = document.querySelector(".popup__input_type_url");
 const inputImgName = document.querySelector(".popup__input_type_card-name");
 const imgPopup = document.querySelector(".popup_type_image");
@@ -40,6 +49,10 @@ function handleOpenPopupProfile(evt) {
   });
 }
 
+function handleChangeAvatar() {
+  openPopup(popupChangeAvatar);
+}
+
 function handleEscapeKey(evt) {
   if (evt.key === "Escape") {
     const popup = document.querySelector(".popup_is-opened");
@@ -54,12 +67,25 @@ function closePopup(popupForClose) {
 
 function changeProfile(evt) {
   evt.preventDefault();
+  changeSavingStatus(profilePopupButton, true);
   submitProfileChanges(config, {
     name: profileInputName.value,
     about: profileInputDescription.value,
   }).then((profileData) => {
     closePopup(profilePopup);
     updateProfile(profileData);
+    changeSavingStatus(profilePopupButton, false);
+  });
+}
+
+function changeAvatar(config) {
+  changeSavingStatus(popupChangeAvatarButton, true)
+  submitAvatar(config, {
+    avatar: inputNewAvatar.value,
+  }).then(() => {
+    updateAvatar(profileImage, inputNewAvatar.value);
+    closePopup(popupChangeAvatar);
+    changeSavingStatus(profilePopupButton, false)
   });
 }
 
@@ -70,20 +96,26 @@ function handleAddPlace() {
 function handleDeletePlace(evt) {
   evt.preventDefault();
   const card = evt.target.closest(".card");
-  popupDeleteCard.setAttribute('data-card_id', card.getAttribute('data-card_id'))
+  popupDeleteCard.setAttribute(
+    "data-card_id",
+    card.getAttribute("data-card_id")
+  );
   openPopup(popupDeleteCard);
 }
 
 function addPlace(evt) {
   evt.preventDefault();
+  changeSavingStatus(popupAddNewCardButton, true);
   const newPlace = {
     name: inputImgName.value,
     link: inputImgLink.value,
   };
-  postCard(config, newPlace).then((cardData) => {
-    addCard(cardData, removeCard);
+  postCard(config, newPlace)
+  .then((cardData) => {
+    addCard(cardData, handleDeletePlace);
     closePopup(popupAddNewCard);
     evt.target.reset();
+    changeSavingStatus(popupAddNewCardButton, false);
   });
 }
 
@@ -97,6 +129,14 @@ function handleShowCard(evt) {
   openPopup(imgPopup);
 }
 
+function changeSavingStatus(button, status) {
+  if (status) {
+    button.textContent = "Сохранение...";
+  } else {
+    button.textContent = "Сохранить";
+  }
+}
+
 export {
   openPopup,
   changeProfile,
@@ -108,5 +148,10 @@ export {
   profileTitle,
   profileDescription,
   handleDeletePlace,
-  popupDeleteCard
+  popupDeleteCard,
+  handleChangeAvatar,
+  changeAvatar,
+  profileImage,
+  changeSavingStatus,
+  popupDeleteCardButton
 };

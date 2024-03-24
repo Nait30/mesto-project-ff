@@ -10,6 +10,22 @@ const config = {
   }
 }
 
+function getCards(config){
+  return fetch (`${config.baseUrl}/cards`, {
+    headers: config.headers
+  })
+  .then(res => {
+    if (res.ok){
+      return res.json();
+    }
+
+    return Promise.reject(`Ошибка: ${res.status}`);
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+}
+
 function getProfile(config) {
   return fetch (`${config.baseUrl}/users/me`, {
     headers: config.headers
@@ -29,30 +45,18 @@ function getProfile(config) {
 function updateProfile(profileData){
     profileTitle.textContent = profileData.name;
     profileDescription.textContent = profileData.about;
-    profileImage.style.backgroundImage = `url(${profileData.avatar})`;
+    updateAvatar(profileImage, profileData.avatar);
 }
 
-function showProfileChanges(config){
+function updateAvatar(avatarElement, newAvatarUrl){
+  avatarElement.style.backgroundImage = `url(${newAvatarUrl})`;
+}
+
+function showProfileChanges(config, profileData){
   getProfile(config)
   .then((profileData) => {updateProfile(profileData)
   })
   
-}
-
-function getCards(config){
-  return fetch (`${config.baseUrl}/cards`, {
-    headers: config.headers
-  })
-  .then(res => {
-    if (res.ok){
-      return res.json();
-    }
-
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-  .catch((err) => {
-    console.log(err);
-  })
 }
 
 function submitProfileChanges (config, profileData){
@@ -71,6 +75,26 @@ function submitProfileChanges (config, profileData){
 .catch((err) => {
   console.log(err);
 })
+}
+
+function submitAvatar (config, avatarData){
+  {
+    return fetch (`${config.baseUrl}/users/me/avatar`, {
+      method: 'PATCH',
+      headers: config.headers,
+      body: JSON.stringify(avatarData)
+  })
+  .then((res) => {
+    if (res.ok){
+      return res.json();
+    }
+  
+    return Promise.reject(`Ошибка: ${res.status}`);
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+  }
 }
 
 function postCard(config, cardData){
@@ -109,7 +133,7 @@ function deleteCard (config, cardId){
 }
 
 function putLike(config, cardId){
-  return fetch (`${config.baseUrl}/likes/${cardId}`, {
+  return fetch (`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'PUT',
     headers: config.headers
 })
@@ -126,7 +150,7 @@ function putLike(config, cardId){
 }
 
 function deleteLike(config, cardId){
-  return fetch (`${config.baseUrl}/likes/${cardId}`, {
+  return fetch (`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'DELETE',
     headers: config.headers
 })
@@ -142,4 +166,4 @@ function deleteLike(config, cardId){
 })
 }
 
-export {getProfile, config, updateProfile, getCards, submitProfileChanges, showProfileChanges, postCard, deleteCard, putLike, deleteLike};
+export {getProfile, config, updateProfile, getCards, submitProfileChanges, showProfileChanges, postCard, deleteCard, putLike, deleteLike, submitAvatar, updateAvatar};

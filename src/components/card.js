@@ -1,9 +1,10 @@
 import { config, getCards, deleteCard, putLike, deleteLike } from "./api";
-import { closePopup, handleShowCard, popupDeleteCard } from "./modal";
+import { closePopup, handleShowCard, popupDeleteCard, changeSavingStatus, popupDeleteCardButton } from "./modal";
+import { profileId } from "../index";
 
 const placesList = document.querySelector(".places__list");
 
-function createCard(cardData, removeCardFunc, likeCardFunc, showCardFunc) {
+function createCard(cardData, removeCardFunc, likeCardFunc, showCardFunc, profileId) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate
     .querySelector(".places__item")
@@ -24,7 +25,7 @@ function createCard(cardData, removeCardFunc, likeCardFunc, showCardFunc) {
 
   cardElement.setAttribute("data-card_id", cardData._id);
 
-  updateLikeStatus(cardData, likeCounter);
+  updateLikeStatus(cardData, likeCounter, likeButton, profileId);
 
   if (cardData.owner._id === "d5f50805c852fa60c1a03892") {
     deleteButton.addEventListener("click", removeCardFunc);
@@ -39,35 +40,37 @@ function createCard(cardData, removeCardFunc, likeCardFunc, showCardFunc) {
   return cardElement;
 }
 
-function addCard(cardData, removeCard) {
+function addCard(cardData, removeCard, profileId) {
   placesList.prepend(
-    createCard(cardData, removeCard, handleLikeCard, handleShowCard)
+    createCard(cardData, removeCard, handleLikeCard, handleShowCard, profileId)
   );
 }
 
 function removeCard(evt) {
   evt.preventDefault();
+  changeSavingStatus(popupDeleteCardButton, true);
   const cardId = popupDeleteCard.getAttribute("data-card_id");
   const cardForDel = document.querySelector(`[data-card_id='${cardId}']`);
   deleteCard(config, cardId).then(() => {
     cardForDel.remove();
     closePopup(popupDeleteCard);
+    changeSavingStatus(popupDeleteCardButton, false);
   });
 }
 
-function showCards(config, addCard, removeCard) {
-  getCards(config).then((res) => {
-    res.forEach((card) => {
-      addCard(card, removeCard);
+
+
+function showCards(addCard, removeCard, cards, profileId) {
+    cards.forEach((card) => {
+      addCard(card, removeCard, profileId);
     });
-  });
 }
 
-function updateLikeStatus(cardData, counter, likeButton) {
+function updateLikeStatus(cardData, counter, likeButton, profileId) {
   counter.textContent = countLikes(cardData.likes);
   if (
     cardData.likes.find((item) => {
-      return (item._id == config.headers.authorization);
+      return (item._id == profileId);
     })
   ) {
     likeButton.classList.add("card__like-button_is-active");
@@ -84,11 +87,11 @@ function handleLikeCard(evt) {
   if(!(likeButton.classList.contains('card__like-button_is-active'))){
     putLike(config, likedCard.getAttribute("data-card_id"))
     .then((cardData)=> {
-      updateLikeStatus(cardData, likeCounter, likeButton);
+      updateLikeStatus(cardData, likeCounter, likeButton, profileId);
     })
   } else {deleteLike(config, likedCard.getAttribute("data-card_id"))
   .then((cardData)=> {
-    updateLikeStatus(cardData, likeCounter, likeButton);})
+    updateLikeStatus(cardData, likeCounter, likeButton, profileId);})
 } 
   
   likeButton.classList.remove("card__like-button_is-active");

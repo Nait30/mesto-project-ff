@@ -39,7 +39,7 @@ function createCard(
 
   updateLikeStatus(cardData, likeCounter, likeButton, profileId);
 
-  if (cardData.owner._id === "d5f50805c852fa60c1a03892") {
+  if (cardData.owner._id === profileId) {
     deleteButton.addEventListener("click", removeCardFunc);
   } else {
     deleteButton.remove();

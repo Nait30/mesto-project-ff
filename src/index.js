@@ -50,8 +50,6 @@ popups.forEach((popup) => {
   });
 });
 
-getCards(config);
-getProfile(config);
 
 Promise.all([getCards(config), getProfile(config)]).then(
   ([cards, profileData]) => {
@@ -59,7 +57,11 @@ Promise.all([getCards(config), getProfile(config)]).then(
     showCards(addCard, handleDeletePlace, cards, profileId);
     updateProfile(profileData);
   }
-);
+  
+)
+.catch((err) => {
+  console.log(err);
+});;
 
 profileEditButton.addEventListener("click", handleOpenPopupProfile);
 
@@ -69,7 +71,9 @@ profileImage.addEventListener("click", handleChangeAvatar);
 
 placeAddButton.addEventListener("click", handleAddPlace);
 
-placeForm.addEventListener("submit", addPlace);
+placeForm.addEventListener("submit",(evt)=> {
+  
+  addPlace(evt, profileId)});
 
 cardDeleteButton.addEventListener("click", removeCard);
 

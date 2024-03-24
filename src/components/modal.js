@@ -1,4 +1,4 @@
-import { createCard, addCard, removeCard } from "./card.js";
+import { createCard, removeCard } from "./card.js";
 import { checkInputValidity, popupValidationConfig } from "./validation.js";
 import {
   submitProfileChanges,
@@ -104,7 +104,7 @@ function handleDeletePlace(evt) {
   openPopup(popupDeleteCard);
 }
 
-function addPlace(evt) {
+function addPlace(evt, userId, addCardFunc) {
   evt.preventDefault();
   changeSavingStatus(popupAddNewCardButton, true);
   const newPlace = {
@@ -112,7 +112,7 @@ function addPlace(evt) {
     link: inputImgLink.value,
   };
   postCard(config, newPlace).then((cardData) => {
-    addCard(cardData, handleDeletePlace);
+    addCardFunc(cardData, handleDeletePlace, userId);
     closePopup(popupAddNewCard);
     evt.target.reset();
     changeSavingStatus(popupAddNewCardButton, false);

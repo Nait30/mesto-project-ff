@@ -21,9 +21,6 @@ function getCards(config) {
 
       return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .catch((err) => {
-      console.log(err);
-    });
 }
 
 function getProfile(config) {
@@ -37,9 +34,6 @@ function getProfile(config) {
 
       return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .catch((err) => {
-      console.log(err);
-    });
 }
 
 function updateProfile(profileData) {
@@ -55,7 +49,10 @@ function updateAvatar(avatarElement, newAvatarUrl) {
 function showProfileChanges(config, profileData) {
   getProfile(config).then((profileData) => {
     updateProfile(profileData);
-  });
+  })
+  .catch((err) => {
+    console.log(err);
+  });;
 }
 
 function submitProfileChanges(config, profileData) {

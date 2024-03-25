@@ -87,4 +87,9 @@ function toggleButtonState(inputList, button, validationConfig) {
   }
 }
 
-export { enableValidation, checkInputValidity, popupValidationConfig };
+function resetValidationErrors(formElement, inputElement, validationConfig){
+    inputElement.setCustomValidity("");
+    hideInputError(formElement, inputElement, validationConfig);
+}
+
+export { enableValidation, checkInputValidity, popupValidationConfig, resetValidationErrors };

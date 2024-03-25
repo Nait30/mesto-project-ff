@@ -1,7 +1,8 @@
-import { profileTitle, profileDescription } from "./modal";
+
 
 const profileImage = document.querySelector(".profile__image");
-
+const profileTitle = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
 const config = {
   baseUrl: "https://nomoreparties.co/v1/wff-cohort-9",
   headers: {
@@ -9,6 +10,7 @@ const config = {
     "Content-Type": "application/json",
   },
 };
+let profileId;
 
 function getCards(config) {
   return fetch(`${config.baseUrl}/cards`, {
@@ -34,6 +36,10 @@ function getProfile(config) {
 
       return Promise.reject(`Ошибка: ${res.status}`);
     })
+}
+
+function saveProfileId(profileData){
+  profileId = profileData._id;
 }
 
 function updateProfile(profileData) {
@@ -175,4 +181,8 @@ export {
   deleteLike,
   submitAvatar,
   updateAvatar,
+  profileTitle,
+  profileDescription,
+  profileId,
+  saveProfileId
 };

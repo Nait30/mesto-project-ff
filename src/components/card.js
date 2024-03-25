@@ -1,14 +1,4 @@
-import { config, getCards, deleteCard, putLike, deleteLike } from "./api";
-import {
-  closePopup,
-  handleShowCard,
-  popupDeleteCard,
-  changeSavingStatus,
-  popupDeleteCardButton,
-} from "./modal";
-import { profileId } from "../index";
-
-const placesList = document.querySelector(".places__list");
+import { config, putLike, deleteLike, profileId } from "./api";
 
 function createCard(
   cardData,
@@ -40,7 +30,9 @@ function createCard(
   updateLikeStatus(cardData, likeCounter, likeButton, profileId);
 
   if (cardData.owner._id === profileId) {
-    deleteButton.addEventListener("click", removeCardFunc);
+    deleteButton.addEventListener("click", ()=>{
+      removeCardFunc(cardElement);
+    });
   } else {
     deleteButton.remove();
   }
@@ -52,29 +44,10 @@ function createCard(
   return cardElement;
 }
 
-function addCard(cardData, removeCard, profileId) {
-  placesList.prepend(
-    createCard(cardData, removeCard, handleLikeCard, handleShowCard, profileId)
-  );
-}
 
-function removeCard(evt) {
-  evt.preventDefault();
-  changeSavingStatus(popupDeleteCardButton, true);
-  const cardId = popupDeleteCard.getAttribute("data-card_id");
-  const cardForDel = document.querySelector(`[data-card_id='${cardId}']`);
-  deleteCard(config, cardId).then(() => {
-    cardForDel.remove();
-    closePopup(popupDeleteCard);
-    changeSavingStatus(popupDeleteCardButton, false);
-  });
-}
 
-function showCards(addCard, removeCard, cards, profileId) {
-  cards.forEach((card) => {
-    addCard(card, removeCard, profileId);
-  });
-}
+
+
 
 function updateLikeStatus(cardData, counter, likeButton, profileId) {
   counter.textContent = countLikes(cardData.likes);
@@ -105,12 +78,10 @@ function handleLikeCard(evt) {
       }
     );
   }
-
-  likeButton.classList.remove("card__like-button_is-active");
 }
 
 function countLikes(likes) {
   return likes.length;
 }
 
-export { createCard, addCard, removeCard, showCards };
+export { createCard, handleLikeCard};

@@ -1,4 +1,4 @@
-import { config, putLike, deleteLike, profileId } from "./api";
+import { config, putLike, deleteLike} from "./api";
 
 function createCard(
   cardData,
@@ -37,7 +37,9 @@ function createCard(
     deleteButton.remove();
   }
 
-  likeButton.addEventListener("click", likeCardFunc);
+  likeButton.addEventListener("click", ()=>{
+    likeCardFunc(cardData, likeCounter, likeButton, profileId, cardElement)
+  });
 
   image.addEventListener("click", showCardFunc);
 
@@ -62,17 +64,13 @@ function updateLikeStatus(cardData, counter, likeButton, profileId) {
   }
 }
 
-function handleLikeCard(evt) {
-  evt.preventDefault();
-  const likeButton = evt.target.closest(".card__like-button");
-  const likedCard = evt.target.closest(".card");
-  const likeCounter = likedCard.querySelector(".likes__counter");
+function handleLikeCard(cardData, likeCounter, likeButton, profileId, card) {
   if (!likeButton.classList.contains("card__like-button_is-active")) {
-    putLike(config, likedCard.getAttribute("data-card_id")).then((cardData) => {
+    putLike(config, cardData._id).then((cardData) => {
       updateLikeStatus(cardData, likeCounter, likeButton, profileId);
     });
   } else {
-    deleteLike(config, likedCard.getAttribute("data-card_id")).then(
+    deleteLike(config, cardData._id).then(
       (cardData) => {
         updateLikeStatus(cardData, likeCounter, likeButton, profileId);
       }

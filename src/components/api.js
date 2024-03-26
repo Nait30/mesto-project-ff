@@ -1,8 +1,3 @@
-
-
-const profileImage = document.querySelector(".profile__image");
-const profileTitle = document.querySelector(".profile__title");
-const profileDescription = document.querySelector(".profile__description");
 const config = {
   baseUrl: "https://nomoreparties.co/v1/wff-cohort-9",
   headers: {
@@ -10,7 +5,6 @@ const config = {
     "Content-Type": "application/json",
   },
 };
-let profileId;
 
 function getCards(config) {
   return fetch(`${config.baseUrl}/cards`, {
@@ -38,28 +32,7 @@ function getProfile(config) {
     })
 }
 
-function saveProfileId(profileData){
-  profileId = profileData._id;
-}
 
-function updateProfile(profileData) {
-  profileTitle.textContent = profileData.name;
-  profileDescription.textContent = profileData.about;
-  updateAvatar(profileImage, profileData.avatar);
-}
-
-function updateAvatar(avatarElement, newAvatarUrl) {
-  avatarElement.style.backgroundImage = `url(${newAvatarUrl})`;
-}
-
-function showProfileChanges(config, profileData) {
-  getProfile(config).then((profileData) => {
-    updateProfile(profileData);
-  })
-  .catch((err) => {
-    console.log(err);
-  });;
-}
 
 function submitProfileChanges(config, profileData) {
   return fetch(`${config.baseUrl}/users/me`, {
@@ -171,18 +144,11 @@ function deleteLike(config, cardId) {
 export {
   getProfile,
   config,
-  updateProfile,
   getCards,
   submitProfileChanges,
-  showProfileChanges,
   postCard,
   deleteCard,
   putLike,
   deleteLike,
-  submitAvatar,
-  updateAvatar,
-  profileTitle,
-  profileDescription,
-  profileId,
-  saveProfileId
+  submitAvatar
 };

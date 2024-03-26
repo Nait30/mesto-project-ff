@@ -1,37 +1,32 @@
 import "./index.css";
-import { initialCards } from "./components/cards.js";
 import {
   createCard, handleLikeCard
 } from "./components/card.js";
 import {
   openPopup,
-  closePopup,
-  handleEscapeKey
+  closePopup
 } from "./components/modal.js";
 import {
   enableValidation,
   popupValidationConfig,
-  checkInputValidity,
   resetValidationErrors
 } from "./components/validation.js";
 import {
   getProfile,
   config,
-  updateProfile,
   getCards,
-  showProfileChanges,  profileTitle,
-  profileDescription,
   submitProfileChanges,
   postCard,
-  deleteCard,saveProfileId,
-  profileId,
-  submitAvatar,updateAvatar 
+  deleteCard,
+  submitAvatar
 } from "./components/api.js";
 const profilePopup = document.querySelector(".popup_type_edit");
 const profileInputName = profilePopup.querySelector(".popup__input_type_name");
 const profileInputDescription = profilePopup.querySelector(
   ".popup__input_type_description"
 );
+const profileTitle = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
 const profileEditButton = document.querySelector(".profile__edit-button");
 const profileForm = document.forms["edit-profile"];
 const avatarForm = document.forms["new-avatar"];
@@ -56,6 +51,7 @@ const imgPopup = document.querySelector(".popup_type_image");
 const bigImg = imgPopup.querySelector(".popup__image");
 const caption = imgPopup.querySelector(".popup__caption");
 let cardForDelete;
+let profileId;
 
 
 function addCard(cardData, removeCard, profileId) {
@@ -76,7 +72,9 @@ function removeCard(card) {
   deleteCard(config, cardId).then(() => {
     card.remove();
     closePopup(popupDeleteCard);
-    changeSavingStatus(popupDeleteCardButton, false);
+  })
+  .catch((err) => {
+    console.log(err);
   })
   .finally(()=>{
     changeSavingStatus(popupDeleteCardButton, false);
@@ -106,6 +104,29 @@ function changeProfile(evt) {
   .finally(()=>{
     changeSavingStatus(profilePopupButton, false);
   })
+}
+
+function saveProfileId(profileData){
+  profileId = profileData._id;
+}
+
+function updateProfile(profileData) {
+  profileTitle.textContent = profileData.name;
+  profileDescription.textContent = profileData.about;
+  updateAvatar(profileImage, profileData.avatar);
+}
+
+function updateAvatar(avatarElement, newAvatarUrl) {
+  avatarElement.style.backgroundImage = `url(${newAvatarUrl})`;
+}
+
+function showProfileChanges(config, profileData) {
+  getProfile(config).then((profileData) => {
+    updateProfile(profileData);
+  })
+  .catch((err) => {
+    console.log(err);
+  });;
 }
 
 function changeAvatar(config) {

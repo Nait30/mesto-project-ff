@@ -47,9 +47,6 @@ function submitProfileChanges(config, profileData) {
 
       return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .catch((err) => {
-      console.log(err);
-    });
 }
 
 function submitAvatar(config, avatarData) {
@@ -66,9 +63,6 @@ function submitAvatar(config, avatarData) {
 
         return Promise.reject(`Ошибка: ${res.status}`);
       })
-      .catch((err) => {
-        console.log(err);
-      });
   }
 }
 
@@ -85,9 +79,6 @@ function postCard(config, cardData) {
 
       return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .catch((err) => {
-      console.log(err);
-    });
 }
 
 function deleteCard(config, cardId) {
@@ -102,9 +93,6 @@ function deleteCard(config, cardId) {
 
       return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .catch((err) => {
-      console.log(err);
-    });
 }
 
 function putLike(config, cardId) {
@@ -119,9 +107,6 @@ function putLike(config, cardId) {
 
       return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .catch((err) => {
-      console.log(err);
-    });
 }
 
 function deleteLike(config, cardId) {
@@ -136,9 +121,6 @@ function deleteLike(config, cardId) {
 
       return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .catch((err) => {
-      console.log(err);
-    });
 }
 
 export {

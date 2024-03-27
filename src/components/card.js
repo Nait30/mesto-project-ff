@@ -1,4 +1,4 @@
-import { config, putLike, deleteLike} from "./api";
+import { config, putLike, deleteLike } from "./api";
 
 function createCard(
   cardData,
@@ -30,26 +30,21 @@ function createCard(
   updateLikeStatus(cardData, likeCounter, likeButton, profileId);
 
   if (cardData.owner._id === profileId) {
-    deleteButton.addEventListener("click", ()=>{
+    deleteButton.addEventListener("click", () => {
       removeCardFunc(cardElement);
     });
   } else {
     deleteButton.remove();
   }
 
-  likeButton.addEventListener("click", ()=>{
-    likeCardFunc(cardData, likeCounter, likeButton, profileId, cardElement)
+  likeButton.addEventListener("click", () => {
+    likeCardFunc(cardData, likeCounter, likeButton, profileId, cardElement);
   });
 
   image.addEventListener("click", showCardFunc);
 
   return cardElement;
 }
-
-
-
-
-
 
 function updateLikeStatus(cardData, counter, likeButton, profileId) {
   counter.textContent = countLikes(cardData.likes);
@@ -66,15 +61,21 @@ function updateLikeStatus(cardData, counter, likeButton, profileId) {
 
 function handleLikeCard(cardData, likeCounter, likeButton, profileId, card) {
   if (!likeButton.classList.contains("card__like-button_is-active")) {
-    putLike(config, cardData._id).then((cardData) => {
-      updateLikeStatus(cardData, likeCounter, likeButton, profileId);
-    });
-  } else {
-    deleteLike(config, cardData._id).then(
-      (cardData) => {
+    putLike(config, cardData._id)
+      .then((cardData) => {
         updateLikeStatus(cardData, likeCounter, likeButton, profileId);
-      }
-    );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    deleteLike(config, cardData._id)
+      .then((cardData) => {
+        updateLikeStatus(cardData, likeCounter, likeButton, profileId);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
 
@@ -82,4 +83,4 @@ function countLikes(likes) {
   return likes.length;
 }
 
-export { createCard, handleLikeCard};
+export { createCard, handleLikeCard };

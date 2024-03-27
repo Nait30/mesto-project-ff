@@ -1,15 +1,10 @@
 import "./index.css";
-import {
-  createCard, handleLikeCard
-} from "./components/card.js";
-import {
-  openPopup,
-  closePopup
-} from "./components/modal.js";
+import { createCard, handleLikeCard } from "./components/card.js";
+import { openPopup, closePopup } from "./components/modal.js";
 import {
   enableValidation,
   popupValidationConfig,
-  resetValidationErrors
+  resetValidationErrors,
 } from "./components/validation.js";
 import {
   getProfile,
@@ -18,7 +13,7 @@ import {
   submitProfileChanges,
   postCard,
   deleteCard,
-  submitAvatar
+  submitAvatar,
 } from "./components/api.js";
 const profilePopup = document.querySelector(".popup_type_edit");
 const profileInputName = profilePopup.querySelector(".popup__input_type_name");
@@ -53,7 +48,6 @@ const caption = imgPopup.querySelector(".popup__caption");
 let cardForDelete;
 let profileId;
 
-
 function addCard(cardData, removeCard, profileId) {
   placesList.prepend(
     createCard(cardData, removeCard, handleLikeCard, handleShowCard, profileId)
@@ -69,16 +63,17 @@ function showCards(addCard, removeCard, cards, profileId) {
 function removeCard(card) {
   changeSavingStatus(popupDeleteCardButton, true);
   const cardId = cardForDelete.getAttribute("data-card_id");
-  deleteCard(config, cardId).then(() => {
-    card.remove();
-    closePopup(popupDeleteCard);
-  })
-  .catch((err) => {
-    console.log(err);
-  })
-  .finally(()=>{
-    changeSavingStatus(popupDeleteCardButton, false);
-  })
+  deleteCard(config, cardId)
+    .then(() => {
+      card.remove();
+      closePopup(popupDeleteCard);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      changeSavingStatus(popupDeleteCardButton, false);
+    });
 }
 
 function handleOpenPopupProfile(evt) {
@@ -97,16 +92,20 @@ function changeProfile(evt) {
   submitProfileChanges(config, {
     name: profileInputName.value,
     about: profileInputDescription.value,
-  }).then((profileData) => {
-    closePopup(profilePopup);
-    updateProfile(profileData);
   })
-  .finally(()=>{
-    changeSavingStatus(profilePopupButton, false);
-  })
+    .then((profileData) => {
+      closePopup(profilePopup);
+      updateProfile(profileData);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      changeSavingStatus(profilePopupButton, false);
+    });
 }
 
-function saveProfileId(profileData){
+function saveProfileId(profileData) {
   profileId = profileData._id;
 }
 
@@ -121,26 +120,31 @@ function updateAvatar(avatarElement, newAvatarUrl) {
 }
 
 function showProfileChanges(config, profileData) {
-  getProfile(config).then((profileData) => {
-    updateProfile(profileData);
-  })
-  .catch((err) => {
-    console.log(err);
-  });;
+  getProfile(config)
+    .then((profileData) => {
+      updateProfile(profileData);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 function changeAvatar(config) {
   changeSavingStatus(popupChangeAvatarButton, true);
   submitAvatar(config, {
     avatar: inputNewAvatar.value,
-  }).then(() => {
-    updateAvatar(profileImage, inputNewAvatar.value);
-    closePopup(popupChangeAvatar);
-    changeSavingStatus(profilePopupButton, false);
   })
-  .finally(()=>{
-    changeSavingStatus(profilePopupButton, false);
-  })
+    .then(() => {
+      updateAvatar(profileImage, inputNewAvatar.value);
+      closePopup(popupChangeAvatar);
+      changeSavingStatus(profilePopupButton, false);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      changeSavingStatus(profilePopupButton, false);
+    });
 }
 
 function handleAddPlace() {
@@ -159,14 +163,18 @@ function addPlace(evt, userId, addCardFunc) {
     name: inputImgName.value,
     link: inputImgLink.value,
   };
-  postCard(config, newPlace).then((cardData) => {
-    addCardFunc(cardData, handleOpenPopupDeletePlace, userId);
-    closePopup(popupAddNewCard);
-    evt.target.reset();
-  })
-  .finally(()=>{
-    changeSavingStatus(popupAddNewCardButton, false);
-  })
+  postCard(config, newPlace)
+    .then((cardData) => {
+      addCardFunc(cardData, handleOpenPopupDeletePlace, userId);
+      closePopup(popupAddNewCard);
+      evt.target.reset();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      changeSavingStatus(popupAddNewCardButton, false);
+    });
 }
 
 function handleShowCard(evt) {
@@ -187,7 +195,6 @@ function changeSavingStatus(button, status) {
   }
 }
 
-
 function handleChangeAvatar() {
   openPopup(popupChangeAvatar);
 }
@@ -203,18 +210,15 @@ popups.forEach((popup) => {
   });
 });
 
-
-Promise.all([getCards(config), getProfile(config)]).then(
-  ([cards, profileData]) => {
+Promise.all([getCards(config), getProfile(config)])
+  .then(([cards, profileData]) => {
     saveProfileId(profileData);
     showCards(addCard, handleOpenPopupDeletePlace, cards, profileId);
     updateProfile(profileData);
-  }
-  
-)
-.catch((err) => {
-  console.log(err);
-});;
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 profileEditButton.addEventListener("click", handleOpenPopupProfile);
 
@@ -224,11 +228,11 @@ profileImage.addEventListener("click", handleChangeAvatar);
 
 placeAddButton.addEventListener("click", handleAddPlace);
 
-placeForm.addEventListener("submit",(evt)=> {
-  
-  addPlace(evt, profileId, addCard)});
+placeForm.addEventListener("submit", (evt) => {
+  addPlace(evt, profileId, addCard);
+});
 
-cardDeleteButton.addEventListener("click", ()=>{
+cardDeleteButton.addEventListener("click", () => {
   removeCard(cardForDelete);
 });
 
@@ -237,4 +241,3 @@ avatarForm.addEventListener("submit", () => {
 });
 
 enableValidation(popupValidationConfig);
-
